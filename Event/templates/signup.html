@@ -1,0 +1,74 @@
+
+<!-- signup -->
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+  
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login & Signup Form</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/style.css')}}">
+    <!-- <script>
+      alert("This page has been reloaded")
+    </script> -->
+  </head>
+  <body>
+    
+    <section class="wrapper">
+      <div class="form signup">
+        <header>Signup</header>
+        <form method="POST" action="/signup">
+          <input type="text" placeholder="Full name" id="name" name="name" required />
+          <input type="text" placeholder="Email address" id="email" name="email" required />
+          <input type="password" placeholder="Password" id="password" name="password" required />
+          <div class="checkbox">
+            <input type="checkbox" id="signupCheck" />
+            <label for="signupCheck">I accept all terms & conditions</label>
+          </div>
+          <input type="submit" value="Signup" />
+        </form>
+      </div>
+
+      <div class="form login">
+        <header>Login</header>
+        <form action="/login" method="POST" autocomplete="off">
+
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+              {% for category,message in messages %}
+                  <div class="alert alert-{{category}}">{{message}}</div>
+              {% endfor %}
+          {% endif %}
+          {% endwith %} 
+
+          <input type="text" placeholder="Email address" id="email" name="email" required />
+          <input type="password" placeholder="Password" id="password" name="password" required />
+          <a href="#">Forgot password?</a>
+          <input type="submit" value="Login" />
+        </form>
+      </div>
+<!-- JavaScripts -->
+      <script>
+        const wrapper = document.querySelector(".wrapper"),
+          signupHeader = document.querySelector(".signup header"),
+          loginHeader = document.querySelector(".login header");
+
+        loginHeader.addEventListener("click", () => {
+          wrapper.classList.add("active");
+        });
+        signupHeader.addEventListener("click", () => {
+          wrapper.classList.remove("active");
+        });
+      </script>
+    </section>
+  </body>
+  <script>
+    $(document).ready(function(){
+        $("form").attr("autocomplete","off");
+    });
+  </script>
+</html>

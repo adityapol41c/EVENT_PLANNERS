@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/92d70a2fd8.js" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        #summary {
+            background-color: #f6f6f6;
+        }
+        .cartItems{
+            flex-direction: row;
+        }
+        .span1name{
+            margin-top: 35px;
+        }
+    </style>
+    
+</head>
+
+
+
+
+<body class="bg-gray-100">
+    <div class="container mx-auto mt-10">
+        <div class="flex shadow-md my-10 ">
+            <div class="w-3/4 bg-white px-10 py-10">
+                <div class="flex justify-between border-b pb-8">
+                    <h1 class="font-semibold text-2xl">Shopping Cart</h1>
+                </div>
+                <!-- <div class="flex mt-10 mb-5">
+                    <h3 class="font-semibold text-gray-600 text-xs uppercase w-2/5">Product Details</h3>
+                    <h3 class="font-semibold text-center text-gray-600 text-xs uppercase w-1/5 text-center">Price</h3>
+                    <h3 class="font-semibold text-center text-gray-600 text-xs uppercase w-1/5 text-center">Total</h3>
+                </div> -->
+                <div class="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5 cartItems ">
+                    
+                </div>
+
+
+
+                <a href="package" class="flex font-semibold text-indigo-600 text-sm mt-10">
+
+                    <svg class="fill-current mr-2 text-indigo-600 w-4" viewBox="0 0 448 512">
+                        <path
+                            d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z" />
+                    </svg>
+                    Continue Shopping
+                </a>
+            </div>
+
+            <div id="summary" class="w-1/4 px-8 py-10">
+                <h1 class="font-semibold text-2xl border-b pb-8">Order Summary</h1>
+             
+                <div class="py-10">
+                    <label for="promo" class="font-semibold inline-block mb-3 text-sm uppercase">Promo Code</label>
+                    <input type="text" id="promo" placeholder="Enter your code" class="p-2 text-sm w-full">
+                </div>
+                <button class="bg-red-500 hover:bg-red-600 px-5 py-2 text-sm text-white uppercase">Apply</button>
+                <div class="border-t mt-8">
+                    <div class="flex font-semibold justify-between py-6 text-sm uppercase">
+                        <span>Total cost</span>
+                        <span id="totalVal">Rs600</span>
+                    </div>
+                    <!-- <a href="paymentGateway"
+                        class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3">Checkout</a> -->
+                        <button id="rzp-button1" class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3">Checkout </button>
+                        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                        <script>var options = {
+                            "key": "rzp_test_kdkdzOYj3cDLCq", // Enter the Key ID generated from the Dashboard
+                            "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                            "currency": "INR",
+                            "name": "Acme Corp", //your business name
+                            "description": "Test Transaction",
+                            "image": "https://example.com/your_logo",
+                            // "order_id": "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the id obtained in the response of Step 1
+                            // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+                            // "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+                            //     "name": "Gaurav Kumar", //your customer's name
+                            //     "email": "gaurav.kumar@example.com",
+                            //     "contact": "9000090000" //Provide the customer's phone number for better conversion rates 
+                            // },
+                            "notes": {
+                                "address": "Razorpay Corporate Office"
+                            },
+                            "theme": {
+                                "color": "#3399cc"
+                            }
+                        };
+                        var rzp1 = new Razorpay(options);
+                        document.getElementById('rzp-button1').onclick = function(e){
+                            rzp1.open();
+                            e.preventDefault();
+                        }</script>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+<script>
+    var sessiosString = sessionStorage.getItem('TheArray')
+    var cartArray = JSON.parse(sessiosString)
+    console.log(cartArray)
+
+    var specialSession = sessionStorage.getItem('TheArraySpecial')
+    var cartArraySpecial = JSON.parse(specialSession)
+
+    let cartItems = document.querySelector('.cartItems')
+    let output = ""
+
+    for (let data of cartArray) {
+        output += `
+
+                    <div class="flex w-2/5"> <!-- product -->
+                        <div class="w-20">
+                            <img class="h-24" src="${data.img}"
+                                alt="">
+                        </div>
+                        <div class="flex flex-col justify-between ml-4 flex-grow">
+                            <span class="font-bold text-sm span1name">${data.Name}</span>
+                            <span class="text-red-500 text-xs">${data.place}</span>
+                        </div>
+                    </div>
+
+                    <span class="text-center w-1/5 font-semibold text-sm">₹ ${data.Price}</span>
+                    <span class="text-center w-1/5 font-semibold text-sm">₹ ${data.Price}</span>
+        
+        `
+        cartItems.innerHTML = output;
+    }
+
+    for (let data of cartArraySpecial) {
+        output += `
+
+                    <div class="flex w-2/5"> <!-- product -->
+                        <div class="w-20">
+                            <img class="h-24" src="${data.img}"
+                                alt="">
+                        </div>
+                        <div class="flex flex-col justify-between ml-4 flex-grow">
+                            <span class="font-bold text-sm span1name">${data.Name} Package</span>
+                        </div>
+                    </div>
+
+                    <span class="text-center w-1/5 font-semibold text-sm">₹ ${data.Price}</span>
+                    <span class="text-center w-1/5 font-semibold text-sm">₹ ${data.Price}</span>
+        
+        `
+        cartItems.innerHTML = output;
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        let totalVal = document.querySelector('#totalVal');
+        var total1 = 0
+        var total2 = 0
+        var final = 0
+        for (let data of cartArray ){
+            dataTotal = data.Price
+            console.log(dataTotal)
+            total1 += Number(dataTotal)
+        }
+        for (let data of cartArraySpecial ){
+            dataTotal = data.Price
+            console.log(dataTotal)
+            total2 += Number(dataTotal)
+        }
+        final = total1 + total2
+        totalVal.innerHTML = final
+        
+    });
+</script>
+
+</html>

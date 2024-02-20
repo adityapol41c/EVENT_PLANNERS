@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/92d70a2fd8.js" crossorigin="anonymous"></script>
+
+    <title>Document</title>
+
+    <style>
+        .moreDetails {
+            display: none;
+        }
+
+        .navbarSection {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header {
+            height: 80px;
+            width: 100%;
+            background-color: goldenrod;
+            border-radius: 3px;
+            margin: 30px 0px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            margin-left: '50%';
+            display: 'none';
+        }
+
+        .header .logo {
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .cart {
+            display: flex;
+            background-color: white;
+            justify-content: space-between;
+            align-items: center;
+            padding: 7px 10px;
+            border-radius: 3px;
+            width: 80px;
+        }
+
+        .fa-solid {
+            color: goldenrod;
+        }
+
+        .cart p {
+            height: 22px;
+            width: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 22px;
+            background-color: goldenrod;
+            color: white;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="py-5 lessDetails">
+        <a href="/" type="button" class="btn btn-primary" style="margin-left: 120px;">Home</a>
+        <h1 class="text-6xl font-normal leading-normal mt-0 mb-2 text-pink-800 text-center">
+            All Events
+        </h1>
+        <div class="container">
+            <div class="mt-4">
+                <div class="col-12 mb-3 col-md-6">
+                    <select class="form-select" id="filterByColor" onchange="searchFilter()">
+                        <option value="" selected>All</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-6 mb-3">
+                    <input type="text" class="form-control" placeholder="Search places" aria-label="Search ">
+
+                </div>
+            </div>
+            <div class="row">
+            </div>
+        </div>
+    </div>
+
+
+
+    <section class="text-gray-700 body-font overflow-hidden bg-white moreDetails">
+
+    </section>
+     <section class="bg-white dark:bg-gray-900 cardsec">
+        <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+            <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
+                <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Key Packages For Event Planning Services</h2>
+            </div>
+
+            <div class="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0 cards">
+
+
+            </div>
+        </div>
+            </section>
+
+
+
+</body>
+<script>
+
+
+
+    data = []
+    cardsArr = []
+    moreData = []
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch("http://127.0.0.1:8000/data")
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (places) {
+                data.push(places)
+                displayData(places)
+                filterData(places)
+            })
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch("http://127.0.0.1:8000/card")
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (cards) {
+                cardsArr.push(cards)
+                filterCard()
+            })
+    });
+
+
+    const moreDetails = (id) => {
+        fetch("http://127.0.0.1:8000/checking")
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (value) {
+                if (value["Value"] == "True") {
+                    moreData.push(data[0][id - 1])
+                    let moreHolder = document.querySelector(".moreDetails")
+                    let lessHolder = document.querySelector(".lessDetails")
+                    let carddiv = document.querySelector(".cards")
+                    lessHolder.style.display = 'none';
+                    let output = ""
+
+                    for (let more of moreData) {
+                        output += `
+        <div class="container px-5 py-24 mx-auto">
+            <div class="lg:w-4/5 mx-auto flex flex-wrap">
+                <img alt="ecommerce" class="lg:w-1/2 w-full object-cover object-center rounded border border-gray-200"
+                    src="${more.img}">
+                <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+                    <h2 class="text-sm title-font text-gray-500 tracking-widest">${more.place}</h2>
+                    <h1 class="text-gray-900 text-3xl title-font font-medium mb-1">${more.Name}</h1>
+                    <div class="flex mb-4">
+                        <span class="flex items-center">
+                            <svg fill="currentColor" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" class="w-4 h-4 text-red-500"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
+                                </path>
+                            </svg>
+                            <svg fill="currentColor" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" class="w-4 h-4 text-red-500"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
+                                </path>
+                            </svg>
+                            <svg fill="currentColor" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" class="w-4 h-4 text-red-500"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
+                                </path>
+                            </svg>
+                            <svg fill="currentColor" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" class="w-4 h-4 text-red-500"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
+                                </path>
+                            </svg>
+                            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" class="w-4 h-4 text-red-500" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
+                                </path>
+                            </svg>
+                            <span class="text-gray-600 ml-3">4 Reviews</span>
+                        </span>
+                        <span class="flex ml-3 pl-3 py-2 border-l-2 border-gray-200">
+                            <a class="text-gray-500">
+                                <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    class="w-5 h-5" viewBox="0 0 24 24">
+                                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
+                                </svg>
+                            </a>
+                            <a class="ml-2 text-gray-500">
+                                <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    class="w-5 h-5" viewBox="0 0 24 24">
+                                    <path
+                                        d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z">
+                                    </path>
+                                </svg>
+                            </a>
+                            <a class="ml-2 text-gray-500">
+                                <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    class="w-5 h-5" viewBox="0 0 24 24">
+                                    <path
+                                        d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z">
+                                    </path>
+                                </svg>
+                            </a>
+                        </span>
+                    </div>
+                    <p class="leading-relaxed">Fam locavore kickstarter distillery. Mixtape chillwave tumeric sriracha
+                        taximy chia microdosing tilde DIY. XOXO fam indxgo juiceramps cornhole raw denim forage
+                        brooklyn. Everyday carry +1 seitan poutine tumeric. Gastropub blue bottle austin listicle
+                        pour-over, neutra jean shorts keytar banjo tattooed umami cardigan.</p>
+                    
+                    <div class="flex">
+                        <span class="title-font font-medium text-2xl text-gray-900">₹ ${more.Price}.00</span>
+                        <button onclick="AddtoCart()"
+                            class="flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">Add Cart</button>
+                        <button
+                            class="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
+                            <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                class="w-5 h-5" viewBox="0 0 24 24">
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        
+        `
+
+
+                        moreHolder.innerHTML = output;
+                        moreHolder.style.display = 'block';
+                    }
+
+
+                } else {
+                    console.log("Not Logged in")
+                    window.location.replace("http://127.0.0.1:8000/signup");
+                }
+
+            }).catch(err => {
+                // Do something for an error here
+                console.log("Error Reading data " + err);
+            });
+
+    }
+
+
+    const displayData = (places) => {
+        let placeholder = document.querySelector(".row");
+        let out = "";
+        for (let place of places) {
+
+            out += `
+                <div class="card p-0 m-1 ${place.place}" style="width:25rem;">
+                <img class="card-img-top" style="height:10rem;" src='${place.img}' alt="Card image cap">
+                    <div class="card-body">
+                    <h5 class="card-title">${place.Name}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Type: ${place.Event}</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">Price: ${place.Price}</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">No of People: ${place.accommodation}</h6>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <button onclick="moreDetails(${place.id})" class="btn btn-primary">Book Now</button>
+                    </div>
+            </div>
+            `
+        }
+        placeholder.innerHTML = out;
+        let optionHolder = document.querySelector(".form-select");
+        let options = "";
+        arr = ["All"]
+        for (let option of places) {
+            arr.push(option.place)
+        }
+
+        let result = arr.filter((item, index) => arr.indexOf(item) === index);
+        for (let val of result) {
+            options += `
+                <option value=${val}>${val}</option>
+                `
+        }
+        optionHolder.innerHTML = options;
+
+    }
+
+    function searchFilter() {
+        $('.form-select').change(function () {
+            if ($(this).val() == "All")
+                return $('.card').show();
+            $('.card').hide();
+            $('.' + $(this).val()).show()
+        });
+    }
+
+
+    const AddtoCart = () => {
+        const count = document.querySelector("#count")
+        sessionStorage.setItem('TheArray', JSON.stringify(moreData))
+        window.location.href = 'cart'
+        count.textContent++
+
+    }
+    const filterData = (data) => {
+        const search = document.querySelector('.form-control');
+        search.addEventListener('input', function (event) {
+            const searchText = event.target.value.toLowerCase();
+            console.log(searchText)
+            const filteredImages = data.filter((image) => {
+                return image.Name.toLowerCase().includes(searchText);
+            });
+            displayData(filteredImages);
+
+        });
+    }
+
+    const AddtoCartSpecial = (Name,Price) =>{
+        alert(Name +' package is added Successfully in cart');
+        let img ="https://cdn2.iconfinder.com/data/icons/online-marketing-butterscotch-vol-2/512/Services_Packages-512.png";
+        
+        cartSpecial = [{img,Name,Price}]
+        sessionStorage.setItem('TheArraySpecial', JSON.stringify(cartSpecial))
+        console.log(Name,Price)
+    }
+
+    const filterCard = () => {
+        let carddiv = document.querySelector(".cards")
+        let output = ""
+        for (let card of cardsArr) {
+
+            let result = card.forEach(element => {
+                output += `
+                            <!-- Pricing Card -->
+                            <div
+                            class="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
+                            <h3 class="mb-4 text-2xl font-semibold">${element.header}</h3>
+                            <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">${element.subtitle}</p>
+                            <div class="flex justify-center items-baseline my-8">
+                                <span class="mr-2 text-5xl font-extrabold">₹ ${element.price}</span>
+                                <span class="text-gray-500 dark:text-gray-400"></span>
+                            </div>
+                            <!-- List -->
+                            <ul role="list" class="mb-8 space-y-4 text-left">
+                                <li class="flex items-center space-x-3">
+                                    <!-- Icon -->
+                                    <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor"
+                                        viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Catering Services</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <!-- Icon -->
+                                    <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor"
+                                        viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Dj and lighting Service</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <!-- Icon -->
+                                    <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor"
+                                        viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Unique Stage Decoration</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <!-- Icon -->
+                                    <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor"
+                                        viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>AC Facility</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <!-- Icon -->
+                                    <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor"
+                                        viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>personalized event branding</span>
+                                </li>
+                            </ul>
+                            <button href="#" onclick="AddtoCartSpecial('${element.header.replace(/"/g, '&quot;').replace(/'/g, '&#39;')}', ${element.price.replace(/"/g, '&quot;').replace(/'/g, '&#39;')})"
+                                class="text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">Choose </button>
+                            `
+                carddiv.innerHTML = output;
+                carddiv.style.display = 'block';
+            });
+
+
+
+
+        }
+
+    }
+</script>
+
+</html>
